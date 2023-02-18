@@ -103,13 +103,9 @@ def printtree(node, indent)
 end
 
 lines = File.readlines(ARGV[0])
-puts lines
 root = Node.new(nil, -1, "X: ROOT")
 build_tree(lines, root)
-pp root
-
 extractStructure(root)
-printtree(root, "")
 result = ""
 result << "@startuml\n"
 root.children.select{|n| n.cat == "T"}.each do |child|
@@ -118,4 +114,4 @@ end
 result << "@enduml\n"
 
 Clipboard.copy(result)
-puts result
+puts "plantuml sources copied to clipboard."
