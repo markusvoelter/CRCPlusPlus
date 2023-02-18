@@ -1,0 +1,71 @@
+CRC Cards Reloaded
+
+I've been doing some high-level architecture work in multiple settings over
+the last weeks. By "high-level" I mean thinking about the components in a 
+system and allocating their reponsibilities and interactions. CRC cards are
+quite well suited for this kind of work. CRC is short for class-reponsibility-
+collaboration, and have originally been introduced by Ward Cunningham and
+Kent Beck. You basically name the components (or classes, whatever) in your 
+system, list how each one contributes to overall system functionality, and
+specify which other "C" they collaborate with, and how. It's basically a
+high-level, informal class diagram. 
+
+The work I was doing was collaborative of course: multiple people contributed
+to the architecture. So we decided that we'd create our CRC 
+"cards" in a Google Doc, simply as a bullet point list with the following
+structure:
+
+* <Component-1 Name>
+  * R: <Reponsibility-1>
+  * R: <Reponsibility-2>
+  * ...
+  * C: <Collaboration-1>
+  * ...
+* <Component-2 Name>
+  * ...
+  
+So far, so obvious. As we worked on this stuff, we found that we needed
+additional info:
+
+* E: An example
+* Q: An open question
+* W: A rationale ("Why?")
+* V: A variant
+* S: A specialisation
+
+Each of those can be attached to (ie., written below, indented) for a component, 
+responsibility or collaboration. Using these additional categories, we were able
+to quickly create a quite rich but still structured description of what would
+be going on in the system. Because it is all textual, things can be changed
+easily, and because it was all done in a collaborative document, every participant
+can contribute directly. 
+
+Obviously, this is not rocket science. Quite likely somebody else had this
+idea of CRC++ before. I am sure that outliners or mind mapping tools can
+categorise things in that way. However, I find this approach really quite
+useful for structuring a system. In particular, I find it much better in
+early stages of design that directly drawing a class diagram because it is
+easier to (collaboratively) edit.
+
+But: the information contained here can be easily mapped to a class diagram:
+
+* Component: a class
+* Responsibiliy: a method
+* Collaboration: an association
+* Specialisation: inheritance
+* Variant, Rationale, Question: comment note
+* Example: a class with some stereotype
+
+So what I am going to do next (or maybe some of you here want to help?)
+it to write a little script that takes markdown of the above structure 
+and transforms it into PlantUML class diagram syntax. It should be easy to
+do: you just need to find newlines, indentation levels and the key letter
+at the beginning of the text. EDIT: I just asked ChatGPT to write the parsing
+part for me. Did that perfectly. The PlantUML generation is simple anyway.
+Problem solved I guess :-)
+
+I am also going to play with another category: N for nesting to be able
+to express containment hierarchies. I fear the things becomes too big at
+some point, but it's sure worth a try.
+
+
