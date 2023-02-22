@@ -14,15 +14,20 @@ Type `ruby crc2plantuml.rb <filename>`
 At this point I expect the file to be structured like this example:
 
 ```
-* T: Car
-  * R: drives the people
-  * E: A mercedes
-  * E: An Audi
-* T: Engine
+* T: TheFirstType
+  * R: A responsibility
+    * E: An example for the responsibility
+  * E: An example for the Type
+  * C: A collaboration with [ASecondType]
+  * C: Creates [ADatyType]
+* T: ASecondType 
   * R: consumes fuel
-  * C: propels the [Car]
-  * Q: Question
-  * W: This is why!
-* T: ElectricalEngine
-  * S: Engine    
+  * Q: A Question for ASecondType
+  * W: A rationale for ASecondType
+  * C: Read [ADatyType]
+* D: ADatyType
+  * R: stores some stuff
+    * E: such as bananas
 ```
+
+![image](https://user-images.githubusercontent.com/592330/220734258-dab2044e-8170-4ce1-b609-dcde95decac2.png)
