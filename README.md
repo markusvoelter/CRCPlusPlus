@@ -1,13 +1,13 @@
 # CRCPlusPlus
 A little utility that transforms text into a PlantUML class diagram source. See this Linkedin article for context: https://www.linkedin.com/pulse/crc-cards-reloaded-markus-voelter
 
+## Prerequisites
+
+This is ruby code. You gotta install Ruby for this to work. You also have to install the `Clipboard` and `pp` gems (as far as I can tell. I am not a Ruby expert at all).
+
 ## Running
 
-This is ruby code. You gotta install Ruby for this to work. Then you run
-
-```
-ruby crc2plantuml.rb <filename>
-``` 
+Type `ruby crc2plantuml.rb <filename>`
 
 ## MD File Structure
 
