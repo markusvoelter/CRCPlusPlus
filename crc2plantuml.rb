@@ -18,7 +18,7 @@ class Node
   end
 end
 
-def build_tree(lines, parent)
+def buildTree(lines, parent)
   if lines.empty? then return end
   line = lines[0]
   rest = lines.drop(1)
@@ -29,17 +29,17 @@ def build_tree(lines, parent)
   if indent_level == parent.indent
     newNode = Node.new(parent.parent, indent_level, line_value)
     parent.parent.children << newNode
-    build_tree(rest, newNode)
+    buildTree(rest, newNode)
   elsif indent_level > parent.indent
     newNode = Node.new(parent, indent_level, line_value)
     parent.children << newNode
-    build_tree(rest, newNode)
+    buildTree(rest, newNode)
   else
-    build_tree(lines, parent.parent)
+    buildTree(lines, parent.parent)
   end
 end
 
-def extract_text(node)
+def extractText(node)
   match = /([A-Z]):(.*)$/.match(node.value)
   if match
     node.cat = match[1].strip
@@ -62,7 +62,7 @@ def splitString(str, len = 35)
 end
 
 def extractStructure(node)
-  extract_text(node)
+  extractText(node)
   node.children.each do |child|
     extractStructure(child)
   end
@@ -113,18 +113,20 @@ end
 
 
 
-def printtree(node, indent)
+def printTree(node, indent)
   print indent
   print node.value
   print "\n"
   node.children.each do |child|
-    printtree(child, indent + "  ")
+    printTree(child, indent + "  ")
   end 
 end
 
-lines = File.readlines(ARGV[0])
+inputFileName = ARGV[0]
+outputFileName = inputFileName + ".plantuml"
+lines = File.readlines(inputFileName)
 root = Node.new(nil, -1, "X: ROOT")
-build_tree(lines, root)
+buildTree(lines, root)
 extractStructure(root)
 result = ""
 result << "@startuml\n"
@@ -141,4 +143,6 @@ end
 result << "@enduml\n"
 
 Clipboard.copy(result)
-puts "plantuml sources copied to clipboard."
+puts "PlantUML sources copied to clipboard; paste them into the demo server at https://www.plantuml.com/plantuml/uml/"
+File.write(outputFileName, result)
+puts "PlantUML sources written to " + outputFileName

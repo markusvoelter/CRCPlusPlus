@@ -1,11 +1,14 @@
-* T: Car
-  * R: drives the people
-  * E: A mercedes
-  * E: An Audi
-* T: Engine
+* T: TheFirstType
+  * R: A responsibility
+    * E: An example for the responsibility
+  * E: An example for the Type
+  * C: A collaboration with [ASecondType]
+  * C: Creates [ADatyType]
+* T: ASecondType 
   * R: consumes fuel
-  * C: propels the [Car]
-  * Q: Question
-  * W: This is why!
-* T: ElectricalEngine
-  * S: Engine
+  * Q: A Question for ASecondType
+  * W: A rationale for ASecondType
+  * C: Read [ADatyType]
+* D: ADatyType
+  * R: stores some stuff
+    * E: such as bananas
