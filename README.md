@@ -30,4 +30,6 @@ At this point I expect the file to be structured like this example:
     * E: such as bananas
 ```
 
+It produces the following class diagram (when the output is processed by PlantUML):
+
 ![image](https://user-images.githubusercontent.com/592330/220734258-dab2044e-8170-4ce1-b609-dcde95decac2.png)
