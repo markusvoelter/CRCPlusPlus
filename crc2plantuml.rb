@@ -47,6 +47,19 @@ def extract_text(node)
   end
 end
 
+def splitString(str)
+  result = []
+  current_line = ''
+  str.split(' ').each do |word|
+    if current_line.length + word.length > 35
+      result << current_line.strip
+      current_line = ''
+    end
+    current_line += word + ' '
+  end
+  result << current_line.strip if current_line.length > 0
+  result.join("\\n")
+end
 
 def extractStructure(node)
   extract_text(node)
@@ -58,32 +71,39 @@ end
 def createPlantUML(result, node)
   if !node then return end
   if !node.value then return end
-  case node.cat
-  when "T"
-    result << "class " << node.text << " {\n"
-    node.childrenOfCat("R").each do |child|
-      result << "  " << child.text << "\n"
+  if node.cat == "T" || node.cat == "D"
+    if node.cat == "T"
+      result << "class " << node.text << " {\n"
+    else 
+      result << "class " << node.text << "<<data>>" << " {\n"
+    end
+    node.childrenOfCat("R").each do |r|
+      result << "-- Responsibility --\n"
+      result << "  " << splitString(r.text) << "\n"
+      r.childrenOfCat("E").each do |e|
+        result << "  E: " << splitString(e.text) << "\n"
+      end 
     end 
     if node.childrenOfCat("E").size > 0 
-      result << "  ==\n"
-      result << "  Examples:\n"
       node.childrenOfCat("E").each do |child|
-        result << "  * " << child.text << "\n"
+        result << "-- Example --\n"
+        result << "  * " << splitString(child.text) << "\n"
       end 
     end
     result << "}\n"
     node.childrenOfCat("Q").each do |child|
-      result << "note top of " << node.text << " : (Question) " << child.text << "\n"
+      result << "note top of " << node.text << " : (Question) " << splitString(child.text) << "\n"
     end 
     node.childrenOfCat("W").each do |child|
-      result << "note right of " << node.text << " : (Rationale) " << child.text << "\n"
+      result << "note right of " << node.text << " : (Rationale) " << splitString(child.text) << "\n"
     end 
     node.childrenOfCat("C").each do |child|
       target = child.text.scan(/\[(.*?)\]/).flatten.first
       text = child.text.gsub(/\[|\]/, '')
-      result << node.text << " --> " << target << " : " << text << "\n"
+      result << node.text << " --> " << target << " : " << splitString(text) << "\n"
     end 
-  when "S"
+  end
+  if node.cat == "S"
     result << node.text << " <|-- " << node.parent.text
   end
   node.children.each do |child|
@@ -108,7 +128,7 @@ build_tree(lines, root)
 extractStructure(root)
 result = ""
 result << "@startuml\n"
-root.children.select{|n| n.cat == "T"}.each do |child|
+root.children.select{|n| n.cat == "T" || n.cat == "D"}.each do |child|
   createPlantUML(result, child)
 end 
 result << "@enduml\n"
