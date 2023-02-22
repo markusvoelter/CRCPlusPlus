@@ -47,11 +47,11 @@ def extract_text(node)
   end
 end
 
-def splitString(str)
+def splitString(str, len = 35)
   result = []
   current_line = ''
   str.split(' ').each do |word|
-    if current_line.length + word.length > 35
+    if current_line.length + word.length > len
       result << current_line.strip
       current_line = ''
     end
@@ -79,15 +79,15 @@ def createPlantUML(result, node)
     end
     node.childrenOfCat("R").each do |r|
       result << "-- Responsibility --\n"
-      result << "  " << splitString(r.text) << "\n"
+      result << "  " << splitString(r.text, 50) << "\n"
       r.childrenOfCat("E").each do |e|
-        result << "  E: " << splitString(e.text) << "\n"
+        result << "  E: " << splitString(e.text, 50) << "\n"
       end 
     end 
     if node.childrenOfCat("E").size > 0 
       node.childrenOfCat("E").each do |child|
         result << "-- Example --\n"
-        result << "  * " << splitString(child.text) << "\n"
+        result << "  * " << splitString(child.text, 50) << "\n"
       end 
     end
     result << "}\n"
@@ -100,7 +100,7 @@ def createPlantUML(result, node)
     node.childrenOfCat("C").each do |child|
       target = child.text.scan(/\[(.*?)\]/).flatten.first
       text = child.text.gsub(/\[|\]/, '')
-      result << node.text << " --> " << target << " : " << splitString(text) << "\n"
+      result << node.text << " --> " << target << " : " << splitString(text, 25) << "\n"
     end 
   end
   if node.cat == "S"
@@ -128,6 +128,13 @@ build_tree(lines, root)
 extractStructure(root)
 result = ""
 result << "@startuml\n"
+result << "skinparam class {\n"
+result << "  BackgroundColor<<data>> PaleGreen\n"
+result << "  ArrowColor #222222\n"
+result << "  BorderColor #222222\n"
+result << "}\n"
+result << "hide circles\n"
+result << "\n"
 root.children.select{|n| n.cat == "T" || n.cat == "D"}.each do |child|
   createPlantUML(result, child)
 end 
