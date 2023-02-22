@@ -1,4 +1,5 @@
-# CRCPlusPlus
+# CRC++
+
 A little utility that transforms text into a PlantUML class diagram source. See this Linkedin article for context: https://www.linkedin.com/pulse/crc-cards-reloaded-markus-voelter
 
 ## Prerequisites
