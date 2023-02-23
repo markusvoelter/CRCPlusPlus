@@ -1,11 +1,11 @@
 require 'pp'
 require 'clipboard'
 
-inputFileName = ARGV[0]
-outputFileName = inputFileName + ".plantuml"
-includeNotes = true
+$inputFileName = ARGV[0]
+$outputFileName = $inputFileName + ".plantuml"
+$includeNotes = true
 if ARGV.length > 1 && ARGV[1] == "-nonotes"
-  includeNotes = false
+  $includeNotes = false
 end
 
 class Node
@@ -22,6 +22,20 @@ class Node
 
   def childrenOfCat(cat) 
     @children.select{|n| n.cat == cat}
+  end
+
+  def childrenOfCatDo(cat, result, fun) 
+    for x in childrenOfCat(cat)
+      result << fun.call(x) << "\n"
+    end
+  end
+  def childrenOfCatDoHeader(header, cat, result, fun) 
+    if childrenOfCat(cat).size > 0 
+      result << "-- " + header + " --\n"
+      for x in childrenOfCat(cat)
+        result << fun.call(x) << "\n"
+      end
+    end
   end
 end
 
@@ -75,64 +89,6 @@ def extractStructure(node)
   end
 end
 
-def createPlantUML(result, node)
-  if !node then return end
-  if !node.value then return end
-  if node.cat == "T" || node.cat == "D"
-    if node.cat == "T"
-      result << "class " << node.text << " {\n"
-    else 
-      result << "class " << node.text << "<<data>>" << " {\n"
-    end
-    if node.childrenOfCat("P").size > 0 
-      result << "-- Properties --\n"
-      node.childrenOfCat("P").each do |r|
-        result << "  <b>[P]</b> " << splitString(r.text, 50) << "\n"
-        r.childrenOfCat("E").each do |e|
-          result << "  --<b>[E]</b> " << splitString(e.text, 50) << "\n"
-        end 
-      end 
-    end
-    if node.childrenOfCat("R").size > 0 
-      result << "-- Responsibilities --\n"
-      node.childrenOfCat("R").each do |r|
-        result << "  <b>[R]</b> " << splitString(r.text, 50) << "\n"
-        r.childrenOfCat("E").each do |e|
-          result << "  --<b>[E]</b> " << splitString(e.text, 50) << "\n"
-        end 
-      end
-    end 
-    if node.childrenOfCat("E").size > 0 
-      result << "-- Examples --\n"
-      node.childrenOfCat("E").each do |child|
-        result << "  <b>[E]</b> " << splitString(child.text, 50) << "\n"
-      end 
-    end
-    result << "}\n"
-    if @includeNotes
-      node.childrenOfCat("Q").each do |child|
-        result << "note top of " << node.text << " : <b>[Q]</b> " << splitString(child.text) << "\n"
-      end 
-      node.childrenOfCat("W").each do |child|
-        result << "note right of " << node.text << " : <b>[R]</b> " << splitString(child.text) << "\n"
-      end 
-    end
-    node.childrenOfCat("C").each do |child|
-      target = child.text.scan(/\[(.*?)\]/).flatten.first
-      text = child.text.gsub(/\[|\]/, '')
-      result << node.text << " --> " << target << " : " << splitString(text, 25) << "\n"
-    end 
-  end
-  if node.cat == "S"
-    result << node.text << " <|-- " << node.parent.text
-  end
-  node.children.each do |child|
-    createPlantUML(result, child)
-  end 
-end
-
-
-
 def printTree(node, indent)
   print indent
   print node.value
@@ -142,8 +98,67 @@ def printTree(node, indent)
   end 
 end
 
+def processTypeNode(result, node, overridingCategory = nil)
+  title = "\"<b><size:17>" + node.text + "</size></b>\" as " + node.text + " "
+  cat = node.cat
+  if overridingCategory != nil then cat = overridingCategory end
+  if cat == "T"
+    result << "class " << title << " {\n"
+  else 
+    result << "class " << title << "<<data>>" << " {\n"
+  end
+  if node.childrenOfCat("P").size > 0 
+    result << "-- Properties --\n"
+    for r in node.childrenOfCat("R")
+      result << "  <b>[P]</b> " << splitString(r.text, 50) << "\n"
+      r.childrenOfCatDo("E", result, lambda {|c| "  :::<b>[E]</b> " + splitString(c.text, 50) })
+      r.childrenOfCatDo("W", result, lambda {|c| "  :::<b>[W]</b> " + splitString(c.text, 50) })
+    end 
+  end
+  if node.childrenOfCat("R").size > 0 
+    result << "-- Responsibilities --\n"
+    for r in node.childrenOfCat("R")
+      result << "  <b>[R]</b> " << splitString(r.text, 50) << "\n"
+      r.childrenOfCatDo("E", result, lambda {|c| "  :::<b>[E]</b> " + splitString(c.text, 50) })
+      r.childrenOfCatDo("W", result, lambda {|c| "  :::<b>[W]</b> " + splitString(c.text, 50) })
+    end
+  end 
+  node.childrenOfCatDoHeader("Examples", "E", result, lambda {|c| "  <b>[E]</b> " + splitString(c.text, 50) })
+  result << "}\n"
+  if $includeNotes == true
+    node.childrenOfCatDo("Q", result, lambda {|c| "note top of " << node.text << " : <b>[Q]</b> " << splitString(c.text) })
+    node.childrenOfCatDo("W", result, lambda {|c| "note top of " << node.text << " : <b>[R]</b> " << splitString(c.text) })
+  end
+  node.childrenOfCat("C").each do |child|
+    target = child.text.scan(/\[(.*?)\]/).flatten.first
+    text = child.text.gsub(/\[|\]/, '')
+    result << node.text << " --> " << target << " : " << splitString(text, 25) << "\n"
+  end 
+  node.childrenOfCat("V").each do |child|
+    processTypeNode(result, child, cat)
+    result << node.text << " <|-- " << child.text << "\n"
+  end 
 
-lines = File.readlines(inputFileName)
+end
+
+
+
+def createPlantUML(result, node)
+  if !node then return end
+  if !node.value then return end
+  if node.cat == "T" || node.cat == "D"
+    processTypeNode(result, node)
+  end
+  node.children.each do |child|
+    createPlantUML(result, child)
+  end 
+  
+end
+
+
+
+
+lines = File.readlines($inputFileName)
 root = Node.new(nil, -1, "X: ROOT")
 buildTree(lines, root)
 extractStructure(root)
@@ -154,7 +169,10 @@ result << "  BackgroundColor<<data>> PaleGreen\n"
 result << "  ArrowColor #222222\n"
 result << "  BorderColor #222222\n"
 result << "}\n"
+result << "skinparam linetype polyline\n"
 result << "hide circles\n"
+result << "hide stereotype\n"
+result << "set separator ::\n"
 result << "\n"
 root.children.select{|n| n.cat == "T" || n.cat == "D"}.each do |child|
   createPlantUML(result, child)
@@ -163,5 +181,5 @@ result << "@enduml\n"
 
 Clipboard.copy(result)
 puts "PlantUML sources copied to clipboard; paste them into the demo server at https://www.plantuml.com/plantuml/uml/"
-File.write(outputFileName, result)
-puts "PlantUML sources written to " + outputFileName
+File.write($outputFileName, result)
+puts "PlantUML sources written to " + $outputFileName
