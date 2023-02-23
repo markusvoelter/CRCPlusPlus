@@ -84,6 +84,10 @@ def createPlantUML(result, node)
         result << "  E: " << splitString(e.text, 50) << "\n"
       end 
     end 
+    node.childrenOfCat("P").each do |r|
+      result << "-- Property --\n"
+      result << "  " << splitString(r.text, 50) << "\n"
+    end 
     if node.childrenOfCat("E").size > 0 
       node.childrenOfCat("E").each do |child|
         result << "-- Example --\n"
