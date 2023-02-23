@@ -1,6 +1,13 @@
 require 'pp'
 require 'clipboard'
 
+inputFileName = ARGV[0]
+outputFileName = inputFileName + ".plantuml"
+includeNotes = true
+if ARGV.length > 1 && ARGV[1] == "-nonotes"
+  includeNotes = false
+end
+
 class Node
   attr_accessor :parent, :indent, :value, :children, :cat, :text
 
@@ -77,30 +84,39 @@ def createPlantUML(result, node)
     else 
       result << "class " << node.text << "<<data>>" << " {\n"
     end
-    node.childrenOfCat("R").each do |r|
-      result << "-- Responsibility --\n"
-      result << "  " << splitString(r.text, 50) << "\n"
-      r.childrenOfCat("E").each do |e|
-        result << "  E: " << splitString(e.text, 50) << "\n"
+    if node.childrenOfCat("P").size > 0 
+      result << "-- Properties --\n"
+      node.childrenOfCat("P").each do |r|
+        result << "  <b>[P]</b> " << splitString(r.text, 50) << "\n"
+        r.childrenOfCat("E").each do |e|
+          result << "  --<b>[E]</b> " << splitString(e.text, 50) << "\n"
+        end 
       end 
-    end 
-    node.childrenOfCat("P").each do |r|
-      result << "-- Property --\n"
-      result << "  " << splitString(r.text, 50) << "\n"
+    end
+    if node.childrenOfCat("R").size > 0 
+      result << "-- Responsibilities --\n"
+      node.childrenOfCat("R").each do |r|
+        result << "  <b>[R]</b> " << splitString(r.text, 50) << "\n"
+        r.childrenOfCat("E").each do |e|
+          result << "  --<b>[E]</b> " << splitString(e.text, 50) << "\n"
+        end 
+      end
     end 
     if node.childrenOfCat("E").size > 0 
+      result << "-- Examples --\n"
       node.childrenOfCat("E").each do |child|
-        result << "-- Example --\n"
-        result << "  * " << splitString(child.text, 50) << "\n"
+        result << "  <b>[E]</b> " << splitString(child.text, 50) << "\n"
       end 
     end
     result << "}\n"
-    node.childrenOfCat("Q").each do |child|
-      result << "note top of " << node.text << " : (Question) " << splitString(child.text) << "\n"
-    end 
-    node.childrenOfCat("W").each do |child|
-      result << "note right of " << node.text << " : (Rationale) " << splitString(child.text) << "\n"
-    end 
+    if @includeNotes
+      node.childrenOfCat("Q").each do |child|
+        result << "note top of " << node.text << " : <b>[Q]</b> " << splitString(child.text) << "\n"
+      end 
+      node.childrenOfCat("W").each do |child|
+        result << "note right of " << node.text << " : <b>[R]</b> " << splitString(child.text) << "\n"
+      end 
+    end
     node.childrenOfCat("C").each do |child|
       target = child.text.scan(/\[(.*?)\]/).flatten.first
       text = child.text.gsub(/\[|\]/, '')
@@ -126,8 +142,7 @@ def printTree(node, indent)
   end 
 end
 
-inputFileName = ARGV[0]
-outputFileName = inputFileName + ".plantuml"
+
 lines = File.readlines(inputFileName)
 root = Node.new(nil, -1, "X: ROOT")
 buildTree(lines, root)
