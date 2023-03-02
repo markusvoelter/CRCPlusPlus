@@ -14,4 +14,4 @@
     * C: Reads and writes [ADataType]
 * D: ADataType
   * R: stores some stuff
-    * E: such as bananas
+    * E: such as apples
