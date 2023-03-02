@@ -109,7 +109,7 @@ def processTypeNode(result, node, overridingCategory = nil)
   end
   if node.childrenOfCat("P").size > 0 
     result << "-- Properties --\n"
-    for r in node.childrenOfCat("R")
+    for r in node.childrenOfCat("P")
       result << "  <b>[P]</b> " << splitString(r.text, 50) << "\n"
       r.childrenOfCatDo("E", result, lambda {|c| "  :::<b>[E]</b> " + splitString(c.text, 50) })
       r.childrenOfCatDo("W", result, lambda {|c| "  :::<b>[W]</b> " + splitString(c.text, 50) })
