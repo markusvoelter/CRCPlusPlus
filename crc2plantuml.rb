@@ -104,8 +104,10 @@ def processTypeNode(result, node, overridingCategory = nil)
   if overridingCategory != nil then cat = overridingCategory end
   if cat == "T"
     result << "class " << title << " {\n"
-  else 
+  elsif cat == "D" 
     result << "class " << title << "<<data>>" << " {\n"
+  else
+    result << "circle " << node.text << "\n"
   end
   if node.childrenOfCat("P").size > 0 
     result << "-- Properties --\n"
@@ -124,7 +126,9 @@ def processTypeNode(result, node, overridingCategory = nil)
     end
   end 
   node.childrenOfCatDoHeader("Examples", "E", result, lambda {|c| "  <b>[E]</b> " + splitString(c.text, 50) })
-  result << "}\n"
+  if cat != "X"
+    result << "}\n"
+  end
   if $includeNotes == true
     node.childrenOfCatDo("Q", result, lambda {|c| "note top of " << node.text << " : <b>[Q]</b> " << splitString(c.text) })
     node.childrenOfCatDo("W", result, lambda {|c| "note top of " << node.text << " : <b>[R]</b> " << splitString(c.text) })
@@ -146,7 +150,7 @@ end
 def createPlantUML(result, node)
   if !node then return end
   if !node.value then return end
-  if node.cat == "T" || node.cat == "D"
+  if node.cat == "T" || node.cat == "D" || node.cat == "X"
     processTypeNode(result, node)
   end
   node.children.each do |child|
@@ -159,6 +163,8 @@ end
 
 
 lines = File.readlines($inputFileName)
+
+
 root = Node.new(nil, -1, "X: ROOT")
 buildTree(lines, root)
 extractStructure(root)
@@ -166,6 +172,7 @@ result = ""
 result << "@startuml\n"
 result << "skinparam class {\n"
 result << "  BackgroundColor<<data>> PaleGreen\n"
+result << "  BackgroundColor<<proxy>> PaleRed\n"
 result << "  ArrowColor #222222\n"
 result << "  BorderColor #222222\n"
 result << "}\n"
@@ -174,7 +181,7 @@ result << "hide circles\n"
 result << "hide stereotype\n"
 result << "set separator ::\n"
 result << "\n"
-root.children.select{|n| n.cat == "T" || n.cat == "D"}.each do |child|
+root.children.select{|n| n.cat == "T" || n.cat == "D" || n.cat == "X"}.each do |child|
   createPlantUML(result, child)
 end 
 result << "@enduml\n"
