@@ -105,10 +105,14 @@ def printTree(node, indent)
   end 
 end
 
+def isToplevel(node) 
+  return node.cat == "T" || node.cat == "D" || node.cat == "X"
+end
+
 def processTypeNode(result, node, overridingCategory = nil)
   many = ""
   if node.many then many = " [*]" end
-  title = "\"<b><size:17>" + node.text + many + "</size></b>\" as " + node.text + " "
+  title = "\"<b><size:16>" + node.text + many + "</size></b>\" as " + node.text + " "
   cat = node.cat
   if overridingCategory != nil then cat = overridingCategory end
   if cat == "T"
@@ -159,7 +163,7 @@ end
 def createPlantUML(result, node)
   if !node then return end
   if !node.value then return end
-  if node.cat == "T" || node.cat == "D" || node.cat == "X"
+  if isToplevel(node)
     processTypeNode(result, node)
   end
   node.children.each do |child|
@@ -180,17 +184,21 @@ extractStructure(root)
 result = ""
 result << "@startuml\n"
 result << "skinparam class {\n"
-result << "  BackgroundColor<<data>> PaleGreen\n"
-result << "  BackgroundColor<<proxy>> PaleRed\n"
-result << "  ArrowColor #222222\n"
-result << "  BorderColor #222222\n"
+result << "  BackgroundColor #e5f4f9\n"
+result << "  BackgroundColor<<data>> #8dc6d9\n"
+result << "  BackgroundColor<<proxy>> #8dc6d9\n"
+result << "  ArrowColor #003233\n"
+result << "  BorderColor #003233\n"
+result << "  ArrowThickness 1.5\n"
+result << "  BorderThickness 1.5\n"
+result << "  FontColor #003233\n"
 result << "}\n"
 result << "skinparam linetype polyline\n"
 result << "hide circles\n"
 result << "hide stereotype\n"
 result << "set separator ::\n"
 result << "\n"
-root.children.select{|n| n.cat == "T" || n.cat == "D" || n.cat == "X"}.each do |child|
+root.children.select{|n| isToplevel(n) }.each do |child|
   createPlantUML(result, child)
 end 
 result << "@enduml\n"
