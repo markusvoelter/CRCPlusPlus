@@ -112,7 +112,12 @@ end
 def processTypeNode(result, node, overridingCategory = nil)
   many = ""
   if node.many then many = " [*]" end
-  title = "\"<b><size:16>" + node.text + many + "</size></b>\" as " + node.text + " "
+  fullLabel = node.text
+  shortLabel = fullLabel
+  if shortLabel.include?("::")
+    shortLabel = shortLabel.split("::").last
+  end
+  title = "\"<b><size:16>" + shortLabel + many + "</size></b>\" as " + fullLabel + " "
   cat = node.cat
   if overridingCategory != nil then cat = overridingCategory end
   if cat == "T"

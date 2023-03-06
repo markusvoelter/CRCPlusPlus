@@ -23,14 +23,14 @@ class "<b><size:16>TheFirstType</size></b>" as TheFirstType  {
 }
 TheFirstType --> Package::ASecondType : A collaboration with\nPackage::ASecondType
 TheFirstType --> ADataType : Creates ADataType
-class "<b><size:16>Package::ASecondType</size></b>" as Package::ASecondType  {
+class "<b><size:16>ASecondType</size></b>" as Package::ASecondType  {
 -- Responsibilities --
   <b>[R]</b> consumes fuel
 }
 note top of Package::ASecondType : <b>[Q]</b> A Question for ASecondType
 note top of Package::ASecondType : <b>[R]</b> A rationale for ASecondType
 Package::ASecondType --> ADataType : Read ADataType
-class "<b><size:16>Package::ASecondTypeBla</size></b>" as Package::ASecondTypeBla  {
+class "<b><size:16>ASecondTypeBla</size></b>" as Package::ASecondTypeBla  {
 -- Responsibilities --
   <b>[R]</b> it does other stuff
 }
