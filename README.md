@@ -46,6 +46,4 @@ It produces the following class diagram (when the output is processed by PlantUM
 
 Here is the alternative rendering with both additional parameters specified:
 
-
-
-  * Q: A Question for ASecondType
+![image](https://user-images.githubusercontent.com/592330/223166304-5952714b-c16c-46e6-b681-e9cb15276e9d.png)
