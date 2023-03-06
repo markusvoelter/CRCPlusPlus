@@ -2,7 +2,7 @@
   * R: A responsibility
     * E: An example for the responsibility
   * E: An example for the Type
-  * C: A collaboration with [ASecondType]
+  * C: A collaboration with [Package::ASecondType]
   * C: Creates [ADataType]
 * T: Package::ASecondType 
   * R: consumes fuel
@@ -12,6 +12,7 @@
   * V: Package::ASecondTypeBla
     * R: it does other stuff
     * C: Reads and writes [ADataType]
-* D: ADataType
+* D: ADataType {many}
   * R: stores some stuff
-    * E: such as apples
+    * E: such as bananas
+* X: SomethingFromSomewhere

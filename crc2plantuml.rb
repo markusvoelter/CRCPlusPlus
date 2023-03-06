@@ -9,7 +9,7 @@ if ARGV.length > 1 && ARGV[1] == "-nonotes"
 end
 
 class Node
-  attr_accessor :parent, :indent, :value, :children, :cat, :text
+  attr_accessor :parent, :indent, :value, :children, :cat, :text, :many
 
   def initialize(parent, indent, value)
     @indent = indent 
@@ -18,6 +18,7 @@ class Node
     @children = []
     @cat = ""
     @text = ""
+    @many = false
   end
 
   def childrenOfCat(cat) 
@@ -61,7 +62,12 @@ def buildTree(lines, parent)
 end
 
 def extractText(node)
-  match = /([A-Z]):(.*)$/.match(node.value)
+  s = node.value
+  if s.include?("{many}")
+    node.many = true
+    s.gsub!("{many}", "")
+  end
+  match = /([A-Z]):(.*)$/.match(s)
   if match
     node.cat = match[1].strip
     node.text = match[2].strip
@@ -99,7 +105,9 @@ def printTree(node, indent)
 end
 
 def processTypeNode(result, node, overridingCategory = nil)
-  title = "\"<b><size:17>" + node.text + "</size></b>\" as " + node.text + " "
+  many = ""
+  if node.many then many = " [*]" end
+  title = "\"<b><size:17>" + node.text + many + "</size></b>\" as " + node.text + " "
   cat = node.cat
   if overridingCategory != nil then cat = overridingCategory end
   if cat == "T"
