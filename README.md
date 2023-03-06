@@ -31,10 +31,11 @@ At this point I expect the file to be structured like this example:
   * V: Package::ASecondTypeBla
     * R: it does other stuff
     * C: Reads and writes [ADataType]
+* X: SomethingFromSomewhere
 * D: ADataType {many}
+  * C: also does something with [SomethingFromSomewhere]
   * R: stores some stuff
     * E: such as bananas
-* X: SomethingFromSomewhere
 ```
 
 It produces the following class diagram (when the output is processed by PlantUML):

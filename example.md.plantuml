@@ -23,6 +23,8 @@ class "<b><size:17>Package::ASecondType</size></b>" as Package::ASecondType  {
 -- Responsibilities --
   <b>[R]</b> consumes fuel
 }
+note top of Package::ASecondType : <b>[Q]</b> A Question for ASecondType
+note top of Package::ASecondType : <b>[R]</b> A rationale for ASecondType
 Package::ASecondType --> ADataType : Read ADataType
 class "<b><size:17>Package::ASecondTypeBla</size></b>" as Package::ASecondTypeBla  {
 -- Responsibilities --
@@ -30,10 +32,11 @@ class "<b><size:17>Package::ASecondTypeBla</size></b>" as Package::ASecondTypeBl
 }
 Package::ASecondTypeBla --> ADataType : Reads and writes\nADataType
 Package::ASecondType <|-- Package::ASecondTypeBla
+circle SomethingFromSomewhere
 class "<b><size:17>ADataType [*]</size></b>" as ADataType <<data>> {
 -- Responsibilities --
   <b>[R]</b> stores some stuff
   :::<b>[E]</b> such as bananas
 }
-circle SomethingFromSomewhere
+ADataType --> SomethingFromSomewhere : also does something with\nSomethingFromSomewhere
 @enduml
