@@ -12,7 +12,7 @@ set separator ::
 
 class "<b><size:17>TheFirstType</size></b>" as TheFirstType  {
 -- Responsibilities --
-  <b>[R]</b> A responsibility
+  <b>[R]</b> A responsibility for <b>TheFirstType</b>
   :::<b>[E]</b> An example for the responsibility
 -- Examples --
   <b>[E]</b> An example for the Type

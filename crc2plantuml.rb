@@ -84,6 +84,7 @@ def splitString(str, len = 35)
     end
     current_line += word + ' '
   end
+  current_line = current_line.gsub(/\[(.*?)\]/, '<b>\1</b>')
   result << current_line.strip if current_line.length > 0
   result.join("\\n")
 end

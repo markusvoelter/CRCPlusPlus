@@ -18,7 +18,7 @@ At this point I expect the file to be structured like this example:
 
 ```
 * T: TheFirstType
-  * R: A responsibility
+  * R: A responsibility for [TheFirstType]
     * E: An example for the responsibility
   * E: An example for the Type
   * C: A collaboration with [Package::ASecondType]

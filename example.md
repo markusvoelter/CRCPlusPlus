@@ -1,5 +1,5 @@
 * T: TheFirstType
-  * R: A responsibility
+  * R: A responsibility for [TheFirstType]
     * E: An example for the responsibility
   * E: An example for the Type
   * C: A collaboration with [Package::ASecondType]
