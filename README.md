@@ -42,4 +42,6 @@ At this point I expect the file to be structured like this example:
 
 It produces the following class diagram (when the output is processed by PlantUML):
 
-![image](https://user-images.githubusercontent.com/592330/223102644-ec9ef894-2e93-4020-8fb8-52a34e905455.png)
+![image](https://user-images.githubusercontent.com/592330/223161398-6c1101ec-7283-4065-b866-c78ddca52a95.png)
+
+  * Q: A Question for ASecondType
