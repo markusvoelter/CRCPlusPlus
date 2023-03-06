@@ -21,20 +21,20 @@ class "<b><size:16>TheFirstType</size></b>" as TheFirstType  {
 -- Examples --
   <b>[E]</b> An example for the Type
 }
-TheFirstType --> Package::ASecondType : A collaboration with\nPackage::ASecondType
-TheFirstType --> ADataType : Creates ADataType
+TheFirstType --> Package::ASecondType : A collaboration with
+TheFirstType --> ADataType : Creates
 class "<b><size:16>ASecondType</size></b>" as Package::ASecondType  {
 -- Responsibilities --
   <b>[R]</b> consumes fuel
 }
 note top of Package::ASecondType : <b>[Q]</b> A Question for ASecondType
 note top of Package::ASecondType : <b>[R]</b> A rationale for ASecondType
-Package::ASecondType --> ADataType : Read ADataType
+Package::ASecondType --> ADataType : Reads $ and so on.
 class "<b><size:16>ASecondTypeBla</size></b>" as Package::ASecondTypeBla  {
 -- Responsibilities --
   <b>[R]</b> it does other stuff
 }
-Package::ASecondTypeBla --> ADataType : Reads and writes\nADataType
+Package::ASecondTypeBla --> ADataType : Reads and writes
 Package::ASecondType <|-- Package::ASecondTypeBla
 circle SomethingFromSomewhere
 class "<b><size:16>ADataType [*]</size></b>" as ADataType <<data>> {
@@ -42,5 +42,5 @@ class "<b><size:16>ADataType [*]</size></b>" as ADataType <<data>> {
   <b>[R]</b> stores some stuff
   :::<b>[E]</b> such as bananas
 }
-ADataType --> SomethingFromSomewhere : also does something with\nSomethingFromSomewhere
+ADataType --> SomethingFromSomewhere : also does something with
 @enduml

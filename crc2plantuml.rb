@@ -4,8 +4,12 @@ require 'clipboard'
 $inputFileName = ARGV[0]
 $outputFileName = $inputFileName + ".plantuml"
 $includeNotes = true
-if ARGV.length > 1 && ARGV[1] == "-nonotes"
+$shortCollab = false
+if ARGV.include?("-nonotes")
   $includeNotes = false
+end
+if ARGV.include?("-collabShortcut")
+  $shortCollab = true
 end
 
 class Node
@@ -153,7 +157,14 @@ def processTypeNode(result, node, overridingCategory = nil)
   end
   node.childrenOfCat("C").each do |child|
     target = child.text.scan(/\[(.*?)\]/).flatten.first
-    text = child.text.gsub(/\[|\]/, '')
+    if $shortCollab
+      text = child.text.gsub(/\[(.*?)\]/, '$')
+      if text.end_with?("$")
+        text = text.chop
+      end
+    else
+      text = child.text.gsub(/\[|\]/, '')
+    end
     result << node.text << " --> " << target << " : " << splitString(text, 25) << "\n"
   end 
   node.childrenOfCat("V").each do |child|

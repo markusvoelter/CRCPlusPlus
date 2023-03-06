@@ -10,7 +10,9 @@ This is ruby code. You gotta install Ruby for this to work. You also have to ins
 
 Type `ruby crc2plantuml.rb <filename>`
 
-You can add an optional second argument `-nonotes` to suppress rendering of the notes in the diagram. 
+There are two additional parameters:
+* `-nonotes` to suppresses rendering of the notes in the diagram. 
+* `-shortCollab` uses a shorter notation on the collaboration arrows by replacing the name of the target with a `$`
 
 ## MD File Structure
 

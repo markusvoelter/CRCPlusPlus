@@ -8,7 +8,7 @@
   * R: consumes fuel
   * Q: A Question for ASecondType
   * W: A rationale for ASecondType
-  * C: Read [ADataType]
+  * C: Reads [ADataType] and so on.
   * V: Package::ASecondTypeBla
     * R: it does other stuff
     * C: Reads and writes [ADataType]
