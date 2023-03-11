@@ -153,7 +153,7 @@ def processTypeNode(result, node, overridingCategory = nil)
   end
   if $includeNotes == true
     node.childrenOfCatDo("Q", result, lambda {|c| "note top of " << node.text << " : <b>[Q]</b> " << splitString(c.text) })
-    node.childrenOfCatDo("W", result, lambda {|c| "note top of " << node.text << " : <b>[R]</b> " << splitString(c.text) })
+    node.childrenOfCatDo("W", result, lambda {|c| "note top of " << node.text << " : <b>[W]</b> " << splitString(c.text) })
   end
   node.childrenOfCat("C").each do |child|
     target = child.text.scan(/\[(.*?)\]/).flatten.first
@@ -210,6 +210,7 @@ result << "  BorderThickness 1.5\n"
 result << "  FontColor #003233\n"
 result << "}\n"
 result << "skinparam linetype polyline\n"
+result << "skinparam groupInheritance 2\n"
 result << "hide circles\n"
 result << "hide stereotype\n"
 result << "set separator ::\n"

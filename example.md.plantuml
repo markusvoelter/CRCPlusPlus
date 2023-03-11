@@ -10,37 +10,44 @@ skinparam class {
   FontColor #003233
 }
 skinparam linetype polyline
+skinparam groupInheritance 2
 hide circles
 hide stereotype
 set separator ::
 
-class "<b><size:16>TheFirstType</size></b>" as TheFirstType  {
--- Responsibilities --
-  <b>[R]</b> A responsibility for <b>TheFirstType</b>
-  :::<b>[E]</b> An example for the responsibility
--- Examples --
-  <b>[E]</b> An example for the Type
+class "<b><size:16>Repository</size></b>" as Repository  {
+-- Properties --
+  <b>[P]</b> Is the central hub to which the other components\nconnect, at least logically
 }
-TheFirstType --> Package::ASecondType : A collaboration with
-TheFirstType --> ADataType : Creates
-class "<b><size:16>ASecondType</size></b>" as Package::ASecondType  {
+note top of Repository : <b>[Q]</b> Is it really physically a\ncentralized component?
+Repository --> Model : stores the
+class "<b><size:16>Editor</size></b>" as Editor  {
+-- Properties --
+  <b>[P]</b> Can be graphical, textual, projectional, etc.
 -- Responsibilities --
-  <b>[R]</b> consumes fuel
+  <b>[R]</b> interacts with the users
 }
-note top of Package::ASecondType : <b>[Q]</b> A Question for ASecondType
-note top of Package::ASecondType : <b>[R]</b> A rationale for ASecondType
-Package::ASecondType --> ADataType : Reads $ and so on.
-class "<b><size:16>ASecondTypeBla</size></b>" as Package::ASecondTypeBla  {
+Editor --> PrimaryModel : Updates the $ based on\nuser's editing gestures
+class "<b><size:16>Processor</size></b>" as Processor  {
 -- Responsibilities --
-  <b>[R]</b> it does other stuff
+  <b>[R]</b> Can create external artifacts
+  :::<b>[E]</b> generators producing text
 }
-Package::ASecondTypeBla --> ADataType : Reads and writes
-Package::ASecondType <|-- Package::ASecondTypeBla
-circle SomethingFromSomewhere
-class "<b><size:16>ADataType [*]</size></b>" as ADataType <<data>> {
--- Responsibilities --
-  <b>[R]</b> stores some stuff
-  :::<b>[E]</b> such as bananas
+Processor --> PrimaryModel : Updates the $\nautomatically based on\nalgorithms
+Processor --> DerivedModel : Creates and updates the $\nbased on algorithms
+class "<b><size:16>Model [*]</size></b>" as Model <<data>> {
+-- Properties --
+  <b>[P]</b> Consists of nodes and edges typed based on a meta\nmodel
 }
-ADataType --> SomethingFromSomewhere : also does something with
+class "<b><size:16>PrimaryModel [*]</size></b>" as PrimaryModel <<data>> {
+-- Properties --
+  <b>[P]</b> Models that cannot be recomputed from others,\nalways persistet
+}
+Model <|-- PrimaryModel
+class "<b><size:16>DerivedModel [*]</size></b>" as DerivedModel <<data>> {
+-- Properties --
+  <b>[P]</b> Models that are derived from other primary or\nderived models; optionally persisted
+}
+note top of DerivedModel : <b>[W]</b> They can be persisted because\nrecomputation can be expensive
+Model <|-- DerivedModel
 @enduml
