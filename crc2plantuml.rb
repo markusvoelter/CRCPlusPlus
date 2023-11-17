@@ -110,7 +110,7 @@ def printTree(node, indent)
 end
 
 def isToplevel(node) 
-  return node.cat == "T" || node.cat == "D" || node.cat == "X"
+  return node.cat == "T" || node.cat == "D" || node.cat == "X" || node.cat == "M"
 end
 
 def processTypeNode(result, node, overridingCategory = nil)
@@ -128,6 +128,8 @@ def processTypeNode(result, node, overridingCategory = nil)
     result << "class " << title << " {\n"
   elsif cat == "D" 
     result << "class " << title << "<<data>>" << " {\n"
+  elsif cat == "M" 
+    result << "class " << title << "<<model>>" << " {\n"
   else
     result << "circle " << node.text << "\n"
   end
@@ -202,6 +204,7 @@ result << "@startuml\n"
 result << "skinparam class {\n"
 result << "  BackgroundColor #e5f4f9\n"
 result << "  BackgroundColor<<data>> #8dc6d9\n"
+result << "  BackgroundColor<<model>> #9ffec3\n"
 result << "  BackgroundColor<<proxy>> #8dc6d9\n"
 result << "  ArrowColor #003233\n"
 result << "  BorderColor #003233\n"
